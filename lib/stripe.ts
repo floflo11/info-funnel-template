@@ -1,21 +1,28 @@
 import Stripe from "stripe";
 import { product } from "./config";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+let _stripe: Stripe | null = null;
+
+function getStripe(): Stripe {
+  if (!_stripe) {
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+  }
+  return _stripe;
+}
 
 let cachedPriceId: string | null = null;
 
 async function getOrCreatePrice(): Promise<string> {
   if (cachedPriceId) return cachedPriceId;
 
-  const existing = await stripe.products.search({
+  const existing = await getStripe().products.search({
     query: `metadata["template"]:"info-funnel"`,
   });
 
   let productId: string;
   if (existing.data.length > 0) {
     productId = existing.data[0].id;
-    const prices = await stripe.prices.list({
+    const prices = await getStripe().prices.list({
       product: productId,
       active: true,
       limit: 1,
@@ -25,7 +32,7 @@ async function getOrCreatePrice(): Promise<string> {
       return cachedPriceId;
     }
   } else {
-    const stripeProduct = await stripe.products.create({
+    const stripeProduct = await getStripe().products.create({
       name: product.name,
       description: product.description,
       metadata: { template: "info-funnel" },
@@ -33,7 +40,7 @@ async function getOrCreatePrice(): Promise<string> {
     productId = stripeProduct.id;
   }
 
-  const price = await stripe.prices.create({
+  const price = await getStripe().prices.create({
     product: productId,
     unit_amount: product.priceInCents,
     currency: product.currency,
@@ -55,7 +62,7 @@ export async function createCheckoutSession(params: {
       product.priceInCents * (product.platformFeePercent / 100),
     ) + product.platformFeeFixed;
 
-  const session = await stripe.checkout.sessions.create({
+  const session = await getStripe().checkout.sessions.create({
     mode: "payment",
     line_items: [{ price: priceId, quantity: 1 }],
     customer_email: params.email,
@@ -80,11 +87,11 @@ export function constructWebhookEvent(
   body: string,
   signature: string,
 ): Stripe.Event {
-  return stripe.webhooks.constructEvent(
+  return getStripe().webhooks.constructEvent(
     body,
     signature,
     process.env.STRIPE_WEBHOOK_SECRET!,
   );
 }
 
-export { stripe };
+export { getStripe as stripe };
