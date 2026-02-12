@@ -1,31 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { product } from "@/lib/config";
-import { useFunnel } from "@/components/funnel-provider";
 
 export default function CheckoutPage() {
-  const { leadId, responses } = useFunnel();
-  const [loading, setLoading] = useState(false);
   const price = (product.priceInCents / 100).toFixed(2);
-
-  const handleCheckout = async () => {
-    setLoading(true);
-    try {
-      const email =
-        (responses.about_you as Record<string, string>)?.email || "";
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ leadId, email }),
-      });
-      const { url } = await res.json();
-      window.location.href = url;
-    } catch {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="pt-6 flex-1 flex flex-col">
@@ -65,15 +44,16 @@ export default function CheckoutPage() {
         </ul>
       </div>
 
-      <motion.button
+      <motion.a
         whileTap={{ scale: 0.98 }}
-        onClick={handleCheckout}
-        disabled={loading}
+        href={product.paymentLinkUrl}
+        target="_blank"
+        rel="noopener noreferrer"
         className="w-full py-4 rounded-full bg-primary text-white font-bold text-lg
-                   disabled:opacity-60 transition-opacity"
+                   text-center block transition-opacity hover:opacity-90"
       >
-        {loading ? "Redirecting…" : `Get It Now — $${price}`}
-      </motion.button>
+        {`Get It Now — $${price}`}
+      </motion.a>
 
       <p className="text-xs text-gray-400 text-center mt-4">
         Secure checkout powered by Stripe. 100% money-back guarantee.

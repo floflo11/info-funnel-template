@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { StepInput } from "@/components/step-input";
 import { useFunnel } from "@/components/funnel-provider";
+import { platform } from "@/lib/config";
 
 export default function AboutYouPage() {
   const router = useRouter();
@@ -15,16 +16,19 @@ export default function AboutYouPage() {
     try {
       setResponse("about_you", values);
 
-      const res = await fetch("/api/leads", {
+      // POST to Freedom platform's centralized lead capture
+      const res = await fetch(`${platform.url}/api/worker/leads`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          founderId: platform.founderId,
           email: values.email,
           name: values.name,
           funnelResponses: { ...responses, about_you: values },
           source:
             typeof window !== "undefined"
-              ? new URLSearchParams(window.location.search).get("ref") || undefined
+              ? new URLSearchParams(window.location.search).get("ref") ||
+                undefined
               : undefined,
         }),
       });

@@ -6,11 +6,17 @@ export const product = {
   currency: "usd" as const,
   influencer: {
     name: "Alex Johnson",
-    connectedAccountId: process.env.STRIPE_CONNECTED_ACCOUNT_ID!,
   },
-  pdfBlobKey: "products/ebook.pdf",
-  platformFeePercent: 5,
-  platformFeeFixed: 30,
+  // Set by the Evolve agent after calling POST /api/worker/payment-links
+  paymentLinkUrl: process.env.NEXT_PUBLIC_PAYMENT_LINK_URL || "",
+};
+
+export const platform = {
+  // Freedom platform URL — leads POST here cross-origin
+  // Uses NEXT_PUBLIC_APP_URL (same key the Freedom app itself uses)
+  url: process.env.NEXT_PUBLIC_APP_URL || "https://getfreedom.app",
+  // Founder UUID — set per-deployment by the Evolve agent
+  founderId: process.env.NEXT_PUBLIC_FOUNDER_ID || "",
 };
 
 export const theme = {
