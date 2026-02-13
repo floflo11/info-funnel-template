@@ -1,7 +1,7 @@
 # Info Funnel Template — Agent Guide
 
 This is a golden reference template for building info product funnels.
-Clone this repo, customize it, and deploy to a Cloudflare Pages subdomain on `founderarena.org`.
+Clone this repo, customize it, and deploy to Cloudflare Pages.
 
 ## Architecture
 
@@ -25,7 +25,7 @@ Funnel Template (this repo)              Freedom Platform (centralized)
 │   instant download           │────dl──→│   session-download               │
 │                              │         │   → instant download via Stripe  │
 │ Deployed to Cloudflare Pages │         │     session (no webhook needed)  │
-│ at {subdomain}.founderarena.org        │                                  │
+│ at {project-name}.pages.dev  │         │                                  │
 └──────────────────────────────┘         │ Stripe webhook                   │
                                          │   → credits founder wallet       │
                                          │   → sends delivery email backup  │
@@ -34,12 +34,12 @@ Funnel Template (this repo)              Freedom Platform (centralized)
 
 ## Setup Flow (what the Evolve agent does)
 
-**Order matters.** The payment link needs the subdomain (for `successUrl`) and the file must be uploaded before any customer can pay.
+**Order matters.** The payment link needs the project name (for `successUrl`) and the file must be uploaded before any customer can pay.
 
-### Step 1: Decide the subdomain
+### Step 1: Decide the project name
 
-Pick a subdomain based on the product/business name. Example: `python-mastery`
-The final URL will be `https://python-mastery.founderarena.org`
+Pick a project name based on the product/business name. Example: `python-mastery`
+The final URL will be `https://python-mastery.pages.dev`
 
 ### Step 2: Create product + payment link
 
@@ -56,7 +56,7 @@ Body: {
   "deliveryType": "download",
   "deliveryEmailSubject": "Your purchase: Python Mastery Course",
   "deliveryEmailBody": "Thank you! Click below to download your course.",
-  "successUrl": "https://python-mastery.founderarena.org/success",  ← REQUIRED
+  "successUrl": "https://python-mastery.pages.dev/success",  ← REQUIRED
   "maxDownloadsPerPurchase": 10,
   "downloadExpiryDays": 30
 }
@@ -88,8 +88,8 @@ These are baked into the static JS at build time. CF Pages needs no runtime env 
 - Edit `lib/config.ts` with product name, price, influencer name
 - Edit funnel copy in `app/(funnel)/*/page.tsx`
 - Build: `npm run build` (uses `output: 'export'`)
-- Deploy: `wrangler pages deploy out --project-name={subdomain}`
-- Domain auto-provisioned at `https://{subdomain}.founderarena.org`
+- Deploy: `npx wrangler pages deploy out --project-name={project-name} --branch=main --commit-dirty=true`
+- Site live at `https://{project-name}.pages.dev` immediately
 
 ### Post-payment flow (automatic, no agent action needed)
 
@@ -140,7 +140,7 @@ is set when creating the payment link via Freedom API.
 | `NEXT_PUBLIC_PAYMENT_LINK_URL` | Yes | Stripe payment link URL (from Freedom API) |
 | `NEXT_PUBLIC_APP_URL` | Yes | Freedom platform URL (same key Freedom uses: `https://getfreedom.app`) |
 | `NEXT_PUBLIC_FOUNDER_ID` | Yes | UUID of the founder who owns this funnel |
-| `NEXT_PUBLIC_BASE_URL` | Yes | Deployed URL of this funnel |
+| `NEXT_PUBLIC_BASE_URL` | Yes | Deployed URL, e.g. `https://{project-name}.pages.dev` |
 
 **Not needed** (handled by Freedom platform):
 - ~~POSTGRES_URL~~ (lead capture POSTs to Freedom API, no local DB)
