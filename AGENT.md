@@ -20,11 +20,15 @@ Funnel Template (this repo)              Freedom Platform (centralized)
 │ Checkout page                │         │ POST /api/worker/products/       │
 │   (links to Stripe URL)      │         │   :id/upload                     │
 │                              │         │   → stores PDF in Blob           │
-│ Deployed to Cloudflare Pages │         │                                  │
-│ at {subdomain}.founderarena.org        │ Stripe webhook                   │
-└──────────────────────────────┘         │   → credits founder wallet       │
-                                         │   → sends delivery email         │
-                                         │   → provides download link       │
+│ Success page                 │         │                                  │
+│   calls Freedom API for      │         │ GET /api/products/               │
+│   instant download           │────dl──→│   session-download               │
+│                              │         │   → instant download via Stripe  │
+│ Deployed to Cloudflare Pages │         │     session (no webhook needed)  │
+│ at {subdomain}.founderarena.org        │                                  │
+└──────────────────────────────┘         │ Stripe webhook                   │
+                                         │   → credits founder wallet       │
+                                         │   → sends delivery email backup  │
                                          └──────────────────────────────────┘
 ```
 
@@ -90,11 +94,14 @@ These are baked into the static JS at build time. CF Pages needs no runtime env 
 ### Post-payment flow (automatic, no agent action needed)
 
 ```
-Customer pays → Stripe redirects to /success ("check your email")
-  → Webhook credits founder's wallet (minus 5% + $0.30 fee)
-  → Delivery email sent via Resend with download button
-  → Customer clicks "Download Now" → JWT-verified download
+Customer pays → Stripe redirects to /success?session_id=cs_xxx
+  → Success page calls Freedom API for instant download URL
+  → Shows "Download Now" button (customer gets file immediately)
+  → Falls back to "check your email" if API unavailable
+  → Webhook fires (5-30s later): credits wallet, sends email backup
 ```
+
+Both delivery channels work in parallel — instant download for immediate gratification, email for a persistent backup link. The platform auto-appends `?session_id={CHECKOUT_SESSION_ID}` to the success URL.
 
 ## What to Customize
 
@@ -178,5 +185,5 @@ No database connection is needed in the template itself. The template is pure st
 → /motivation (multi choice)
 → /proof (testimonial carousel)
 → /checkout (pricing + Stripe payment link)
-→ Stripe Checkout (hosted by Stripe) → Freedom handles delivery email
+→ Stripe Checkout (hosted by Stripe) → /success (instant download + email backup)
 ```
