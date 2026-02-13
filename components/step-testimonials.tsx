@@ -37,7 +37,7 @@ export function StepTestimonials({
       {subheading && <p className="text-gray-500 mb-6">{subheading}</p>}
 
       <div className="flex-1 overflow-hidden min-h-[280px]">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={currentIndex}
             initial={{ opacity: 0, x: 30 }}
