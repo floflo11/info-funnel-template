@@ -51,6 +51,18 @@ body {
     linear-gradient(145deg, #0a1a0a 0%, #1a2e1a 45%, #0f1f0f 100%);
 }
 
+/* Page-enter animation — CSS-only, no JS dependency.
+   Plays on first paint (before hydration) and on client-side
+   navigation when React remounts the keyed wrapper. */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateX(8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.page-enter {
+  animation: pageEnter 0.2s ease-out both;
+}
+
 /* Splash icon shimmer */
 .splash-icon-gradient {
   background:

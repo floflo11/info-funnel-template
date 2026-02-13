@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
 import { funnelSteps, getStepIndex, getNextStep } from "@/lib/funnel-steps";
 import { product } from "@/lib/config";
 import type { ReactNode } from "react";
@@ -22,13 +21,11 @@ export function FunnelShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-dvh flex flex-col">
-      {/* Progress bar */}
+      {/* Progress bar — CSS transition, no Framer Motion */}
       <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-gray-200">
-        <motion.div
-          className="h-full bg-primary"
-          initial={false}
-          animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+        <div
+          className="h-full bg-primary transition-[width] duration-300 ease-in-out"
+          style={{ width: `${progress}%` }}
         />
       </div>
 
@@ -39,22 +36,13 @@ export function FunnelShell({ children }: { children: ReactNode }) {
         </p>
       </div>
 
-      {/* Content — initial={false} skips animations on first mount,
-          preventing the hydration mismatch flash (SSR renders
-          transform:none but Framer Motion produces translateX(0px)) */}
+      {/* Content — CSS animation (pageEnter keyframes in globals.css).
+          key={pathname} remounts on navigation, replaying the animation.
+          No Framer Motion means zero hydration style changes. */}
       <main className="flex-1 flex flex-col px-6 max-w-[640px] mx-auto w-full pb-32">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={pathname}
-            initial={{ opacity: 0, x: 12 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -12 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="flex-1 flex flex-col"
-          >
-            {children}
-          </motion.div>
-        </AnimatePresence>
+        <div key={pathname} className="flex-1 flex flex-col page-enter">
+          {children}
+        </div>
       </main>
     </div>
   );
