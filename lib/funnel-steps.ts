@@ -4,15 +4,28 @@ export type FunnelStep = {
 };
 
 export const funnelSteps: FunnelStep[] = [
+  // Part 1: Diagnostic Survey (Screens 0-4)
   { path: "/", label: "Welcome" },
+  { path: "/hook", label: "Hook" },
+  { path: "/frustration", label: "Frustration" },
+  { path: "/experience", label: "Experience" },
   { path: "/goal", label: "Goal" },
-  { path: "/insight", label: "Insight" },
-  { path: "/approach", label: "Approach" },
-  { path: "/promise", label: "Promise" },
-  { path: "/qualify", label: "About You" },
+
+  // Part 2: Value Reinforcement (Screens 5-10)
+  { path: "/insight", label: "Pivot" },
+  { path: "/approach", label: "Architecture" },
+  { path: "/promise", label: "Burden Transfer" },
+  { path: "/role", label: "Your Role" },
+  { path: "/shift", label: "Structural Shift" },
+  { path: "/results", label: "Compounding" },
+
+  // Part 3: Qualification + Lead Capture
+  { path: "/qualify", label: "Qualify" },
   { path: "/about-you", label: "Contact" },
   { path: "/motivation", label: "Motivation" },
   { path: "/proof", label: "Proof" },
+
+  // Part 4: Checkout (Screen 11)
   { path: "/checkout", label: "Checkout" },
 ];
 

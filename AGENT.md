@@ -167,23 +167,37 @@ No database connection is needed in the template itself. The template is pure st
 | Component | File | Use for |
 |-----------|------|---------|
 | `StepChoice` | `components/step-choice.tsx` | Single or multi-select question |
-| `StepSocialProof` | `components/step-social-proof.tsx` | Big stat with dark card |
+| `StepValue` | `components/step-value.tsx` | Centered heading + body (value reinforcement screens) |
+| `StepSocialProof` | `components/step-social-proof.tsx` | Big stat with dark gradient card |
 | `StepTestimonials` | `components/step-testimonials.tsx` | Before/after carousel |
 | `StepInput` | `components/step-input.tsx` | Form fields (text, email, select) |
 | `ContinueButton` | `components/continue-button.tsx` | Sticky bottom CTA |
 
-## Funnel Flow
+## Funnel Flow (16 steps)
 
 ```
-/ (splash, 3s auto-advance)
-→ /goal (single choice)
-→ /insight (social proof stat)
-→ /approach (single choice)
-→ /promise (results claim)
-→ /qualify (form: experience level)
-→ /about-you (form: name + email — LEAD CAPTURE, POSTs to Freedom API cross-origin)
-→ /motivation (multi choice)
-→ /proof (testimonial carousel)
-→ /checkout (pricing + Stripe payment link)
-→ Stripe Checkout (hosted by Stripe) → /success (instant download + email backup)
+Part 1 — Diagnostic Survey:
+  / (splash, 3s auto-advance)
+  → /hook ("How long have you been trying to [X]?" — single choice)
+  → /frustration ("Which of these is most frustrating?" — single choice)
+  → /experience ("What have you tried before?" — single choice)
+  → /goal ("What's your biggest challenge?" — single choice)
+
+Part 2 — Value Reinforcement:
+  → /insight (The Pivot — why old methods fail)
+  → /approach (The Architecture — how the system works)
+  → /promise (The Burden Transfer — what's removed)
+  → /role (The User's Role — what you do)
+  → /shift (The Structural Shift — new daily reality)
+  → /results (The Compounding Effect — long-term benefit)
+
+Part 3 — Qualification + Lead Capture:
+  → /qualify ("Where are you in your journey?" — single choice)
+  → /about-you (name + email — LEAD CAPTURE, POSTs to Freedom API cross-origin)
+  → /motivation ("What would achieving this mean?" — multi choice)
+  → /proof (testimonial carousel)
+
+Part 4 — Checkout:
+  → /checkout (pricing + Stripe payment link)
+  → Stripe Checkout (hosted by Stripe) → /success (instant download + email backup)
 ```

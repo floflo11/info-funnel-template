@@ -1,15 +1,11 @@
-import { StepChoice } from "@/components/step-choice";
+import { StepValue } from "@/components/step-value";
 
 export default function ApproachPage() {
   return (
-    <StepChoice
-      questionKey="approach"
-      question="How do you prefer to learn?"
+    <StepValue
+      heading="A proven system"
+      body="8 chapters. One clear framework. Real examples from creators who went from zero to full-time income."
       currentPath="/approach"
-      options={[
-        { value: "self_paced", label: "Self-paced — I'll read and apply on my own" },
-        { value: "guided", label: "Guided — I want a clear step-by-step plan" },
-      ]}
     />
   );
 }

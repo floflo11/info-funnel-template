@@ -1,11 +1,10 @@
-import { StepSocialProof } from "@/components/step-social-proof";
+import { StepValue } from "@/components/step-value";
 
 export default function InsightPage() {
   return (
-    <StepSocialProof
-      stat="73%"
-      caption="of creators say *monetization* is their #1 struggle"
-      subcaption="Based on a 2024 survey of 2,000+ content creators across all platforms."
+    <StepValue
+      heading="Here's why it hasn't worked"
+      body="Random tips and tactics give you pieces. You need the full picture — a system that connects strategy to execution."
       currentPath="/insight"
     />
   );
