@@ -21,7 +21,7 @@ export function StepSocialProof({
 
   return (
     <div className="pt-6 flex-1 flex flex-col">
-      <div className="rounded-3xl overflow-hidden bg-stone-800 text-white p-8 flex-1 flex flex-col justify-center relative">
+      <div className="rounded-3xl overflow-hidden card-gradient text-white p-8 flex-1 flex flex-col justify-center relative">
         {imageSrc && (
           <div
             className="absolute inset-0 opacity-30 bg-cover bg-center"

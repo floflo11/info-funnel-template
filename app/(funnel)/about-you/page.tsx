@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { StepInput } from "@/components/step-input";
 import { useFunnel } from "@/components/funnel-provider";
@@ -9,41 +8,33 @@ import { platform } from "@/lib/config";
 export default function AboutYouPage() {
   const router = useRouter();
   const { responses, setResponse, setLeadId } = useFunnel();
-  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (values: Record<string, string>) => {
-    setSubmitting(true);
-    try {
-      setResponse("about_you", values);
+  const handleSubmit = (values: Record<string, string>) => {
+    setResponse("about_you", values);
 
-      // POST to Freedom platform's centralized lead capture
-      const res = await fetch(`${platform.url}/api/worker/leads`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          founderId: platform.founderId,
-          email: values.email,
-          name: values.name,
-          funnelResponses: { ...responses, about_you: values },
-          source:
-            typeof window !== "undefined"
-              ? new URLSearchParams(window.location.search).get("ref") ||
-                undefined
-              : undefined,
-        }),
-      });
+    // Fire-and-forget lead capture — don't block navigation
+    fetch(`${platform.url}/api/worker/leads`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        founderId: platform.founderId,
+        email: values.email,
+        name: values.name,
+        funnelResponses: { ...responses, about_you: values },
+        source:
+          typeof window !== "undefined"
+            ? new URLSearchParams(window.location.search).get("ref") ||
+              undefined
+            : undefined,
+      }),
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.id) setLeadId(data.id);
+      })
+      .catch(() => {});
 
-      if (res.ok) {
-        const { id } = await res.json();
-        setLeadId(id);
-      }
-
-      router.push("/motivation");
-    } catch {
-      router.push("/motivation");
-    } finally {
-      setSubmitting(false);
-    }
+    router.push("/motivation");
   };
 
   return (

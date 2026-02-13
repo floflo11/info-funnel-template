@@ -29,6 +29,8 @@ export function StepChoice({
   const { setResponse } = useFunnel();
   const [selected, setSelected] = useState<string[]>([]);
 
+  const [picked, setPicked] = useState<string | null>(null);
+
   const handleSelect = (value: string) => {
     if (multi) {
       setSelected((prev) =>
@@ -37,9 +39,10 @@ export function StepChoice({
           : [...prev, value],
       );
     } else {
+      setPicked(value);
       setResponse(questionKey, value);
       const next = getNextStep(currentPath);
-      if (next) router.push(next);
+      if (next) setTimeout(() => router.push(next), 150);
     }
   };
 
@@ -59,14 +62,18 @@ export function StepChoice({
       )}
       <div className="space-y-3">
         {options.map((opt) => {
-          const isSelected = selected.includes(opt.value);
+          const isSelected = multi
+            ? selected.includes(opt.value)
+            : picked === opt.value;
           return (
             <motion.button
               key={opt.value}
               whileTap={{ scale: 0.98 }}
               onClick={() => handleSelect(opt.value)}
+              disabled={!multi && picked !== null}
               className={`w-full text-left p-5 rounded-2xl border-2 transition-colors
-                ${isSelected ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}`}
+                ${isSelected ? "border-primary bg-primary/5" : "border-gray-200 hover:border-gray-300"}
+                ${!multi && picked !== null && !isSelected ? "opacity-50" : ""}`}
             >
               <span className="text-base font-medium">{opt.label}</span>
             </motion.button>

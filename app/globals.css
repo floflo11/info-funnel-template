@@ -11,3 +11,50 @@ body {
   background-color: var(--color-surface);
   color: var(--color-foreground);
 }
+
+/* ── Card gradient presets ──────────────────────────────────
+   Used on social-proof stat cards and splash hero.
+   Pick one via the `cardGradient` class, or set CSS vars
+   --grad-1, --grad-2, --grad-3 to roll your own colors. */
+
+.card-gradient {
+  background:
+    radial-gradient(ellipse at 15% 85%, var(--grad-1, rgba(184, 115, 51, 0.35)) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 15%, var(--grad-2, rgba(245, 166, 35, 0.2)) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, var(--grad-3, rgba(200, 80, 50, 0.12)) 0%, transparent 60%),
+    linear-gradient(145deg, #1a0e05 0%, #2a1810 40%, #1a1008 100%);
+}
+
+/* Alternative presets — swap class on the card to use */
+
+.card-gradient-aurora {
+  background:
+    radial-gradient(ellipse at 15% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 20%, rgba(236, 72, 153, 0.15) 0%, transparent 55%),
+    radial-gradient(ellipse at 55% 50%, rgba(78, 205, 196, 0.18) 0%, transparent 55%),
+    linear-gradient(145deg, #0f0c29 0%, #1a1a2e 45%, #16213e 100%);
+}
+
+.card-gradient-midnight {
+  background:
+    radial-gradient(ellipse at 25% 75%, rgba(59, 130, 246, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 25%, rgba(139, 92, 246, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 55%),
+    linear-gradient(145deg, #0a0a1a 0%, #111827 45%, #0f172a 100%);
+}
+
+.card-gradient-moss {
+  background:
+    radial-gradient(ellipse at 20% 80%, rgba(16, 185, 129, 0.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 20%, rgba(245, 158, 11, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(34, 197, 94, 0.1) 0%, transparent 55%),
+    linear-gradient(145deg, #0a1a0a 0%, #1a2e1a 45%, #0f1f0f 100%);
+}
+
+/* Splash icon shimmer */
+.splash-icon-gradient {
+  background:
+    radial-gradient(circle at 30% 30%, var(--color-primary) 0%, transparent 70%),
+    radial-gradient(circle at 70% 70%, var(--color-accent) 0%, transparent 70%),
+    linear-gradient(135deg, rgba(184, 115, 51, 0.15) 0%, rgba(245, 166, 35, 0.1) 100%);
+}

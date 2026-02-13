@@ -21,7 +21,7 @@ export default function SplashPage() {
         transition={{ duration: 0.6 }}
         className="space-y-6"
       >
-        <div className="w-24 h-24 rounded-3xl bg-primary/10 mx-auto flex items-center justify-center">
+        <div className="w-24 h-24 rounded-3xl splash-icon-gradient mx-auto flex items-center justify-center">
           <span className="text-4xl font-bold text-primary">
             {product.influencer.name.charAt(0)}
           </span>

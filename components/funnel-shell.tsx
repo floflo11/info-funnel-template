@@ -18,9 +18,8 @@ export function FunnelShell({ children }: { children: ReactNode }) {
       <div className="fixed top-0 left-0 right-0 z-50 h-1 bg-gray-200">
         <motion.div
           className="h-full bg-primary"
-          initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
         />
       </div>
 
@@ -39,7 +38,7 @@ export function FunnelShell({ children }: { children: ReactNode }) {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
             className="flex-1 flex flex-col"
           >
             {children}

@@ -36,13 +36,14 @@ export function StepTestimonials({
       <h1 className="text-2xl sm:text-3xl font-bold mb-2">{heading}</h1>
       {subheading && <p className="text-gray-500 mb-6">{subheading}</p>}
 
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden min-h-[280px]">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
-            initial={{ opacity: 0, x: 50 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
+            exit={{ opacity: 0, x: -30 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
             className="grid grid-cols-2 gap-4"
           >
             {testimonials

@@ -44,16 +44,23 @@ export default function CheckoutPage() {
         </ul>
       </div>
 
-      <motion.a
-        whileTap={{ scale: 0.98 }}
-        href={product.paymentLinkUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="w-full py-4 rounded-full bg-primary text-white font-bold text-lg
-                   text-center block transition-opacity hover:opacity-90"
-      >
-        {`Get It Now — $${price}`}
-      </motion.a>
+      {product.paymentLinkUrl ? (
+        <motion.a
+          whileTap={{ scale: 0.98 }}
+          href={product.paymentLinkUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full py-4 rounded-full bg-primary text-white font-bold text-lg
+                     text-center block transition-opacity hover:opacity-90"
+        >
+          {`Get It Now — $${price}`}
+        </motion.a>
+      ) : (
+        <div className="w-full py-4 rounded-full bg-gray-300 text-white font-bold text-lg
+                        text-center block cursor-not-allowed">
+          Coming Soon
+        </div>
+      )}
 
       <p className="text-xs text-gray-400 text-center mt-4">
         Secure checkout powered by Stripe. 100% money-back guarantee.
