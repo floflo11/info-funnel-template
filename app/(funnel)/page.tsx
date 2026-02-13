@@ -1,23 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { product } from "@/lib/config";
 
 export default function SplashPage() {
   const router = useRouter();
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
+    // Trigger fade-in after hydration (requestAnimationFrame avoids
+    // running in the same frame as React's commit phase).
+    const raf = requestAnimationFrame(() => setShow(true));
     const timer = setTimeout(() => router.push("/goal"), 3000);
-    return () => clearTimeout(timer);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearTimeout(timer);
+    };
   }, [router]);
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center text-center">
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={false}
+        animate={show ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
         transition={{ duration: 0.6 }}
         className="space-y-6"
       >
@@ -34,6 +41,7 @@ export default function SplashPage() {
             <motion.div
               key={i}
               className="w-2 h-2 rounded-full bg-primary"
+              initial={false}
               animate={{ opacity: [0.3, 1, 0.3] }}
               transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
             />

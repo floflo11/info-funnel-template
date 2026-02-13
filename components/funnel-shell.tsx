@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { funnelSteps, getStepIndex, getNextStep } from "@/lib/funnel-steps";
@@ -13,16 +13,6 @@ export function FunnelShell({ children }: { children: ReactNode }) {
   const stepIndex = getStepIndex(pathname);
   const progress =
     stepIndex >= 0 ? ((stepIndex + 1) / funnelSteps.length) * 100 : 0;
-
-  // Track whether a client-side navigation has occurred.
-  // On the initial render (SSR hydration) we match initial to animate
-  // so content appears instantly — no flash of invisible→slide-in.
-  const hasNavigated = useRef(false);
-  const prevPath = useRef(pathname);
-  if (prevPath.current !== pathname) {
-    hasNavigated.current = true;
-    prevPath.current = pathname;
-  }
 
   // Prefetch the next step so page chunks are ready before the user navigates.
   const nextStep = getNextStep(pathname);
@@ -49,16 +39,14 @@ export function FunnelShell({ children }: { children: ReactNode }) {
         </p>
       </div>
 
-      {/* Content */}
+      {/* Content — initial={false} skips animations on first mount,
+          preventing the hydration mismatch flash (SSR renders
+          transform:none but Framer Motion produces translateX(0px)) */}
       <main className="flex-1 flex flex-col px-6 max-w-[640px] mx-auto w-full pb-32">
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={pathname}
-            initial={
-              hasNavigated.current
-                ? { opacity: 0, x: 12 }
-                : { opacity: 1, x: 0 }
-            }
+            initial={{ opacity: 0, x: 12 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -12 }}
             transition={{ duration: 0.2, ease: "easeOut" }}

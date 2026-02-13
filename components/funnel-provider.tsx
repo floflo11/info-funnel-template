@@ -6,6 +6,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useRef,
   type ReactNode,
 } from "react";
 
@@ -24,22 +25,23 @@ const STORAGE_KEY = "funnel-responses";
 const LEAD_KEY = "funnel-lead-id";
 
 export function FunnelProvider({ children }: { children: ReactNode }) {
-  const [responses, setResponses] = useState<FunnelResponses>(() => {
-    if (typeof window === "undefined") return {};
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : {};
-    } catch {
-      return {};
-    }
-  });
-
-  const [leadId, setLeadIdState] = useState<string | null>(() => {
-    if (typeof window === "undefined") return null;
-    return localStorage.getItem(LEAD_KEY);
-  });
+  // Initialize with stable defaults so SSR and client produce identical HTML.
+  // localStorage is read in useEffect after hydration — no mismatch.
+  const [responses, setResponses] = useState<FunnelResponses>({});
+  const [leadId, setLeadIdState] = useState<string | null>(null);
+  const hydrated = useRef(false);
 
   useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) setResponses(JSON.parse(stored));
+    } catch {}
+    setLeadIdState(localStorage.getItem(LEAD_KEY));
+    hydrated.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated.current) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(responses));
   }, [responses]);
 
